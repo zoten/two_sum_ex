@@ -6,13 +6,15 @@ defmodule TwoSum.ParallelEts do
   overall complexity remains the same
   """
   @default_table :cache
+  @default_max_concurrency 10
 
   @spec run(input :: list(integer()), target :: integer()) ::
           {indexes :: {number0 :: integer(), number0 :: integer()},
            numbers :: {number0 :: integer(), number0 :: integer()}}
           | :not_found
   def run([_h | _t] = input, target, options \\ []) do
-    table_name = Keyword.get(options, :table_name, @default_table)
+    table_name = options |> Keyword.get(:table_name, @default_table) |> maybe_random_name()
+    max_concurrency = Keyword.get(options, :max_concurrency, @default_max_concurrency)
 
     _table = :ets.new(table_name, [:named_table, :public])
 
@@ -35,7 +37,7 @@ defmodule TwoSum.ParallelEts do
             :not_found
         end
       end,
-      max_concurrency: 10
+      max_concurrency: max_concurrency
     )
     |> Enum.reduce_while(
       :not_found,
@@ -62,4 +64,14 @@ defmodule TwoSum.ParallelEts do
       {{idx0, idx1}, {item0, item1}}
     end
   end
+
+  @symbols ~c"0123456789abcdef"
+  @symbol_count Enum.count(@symbols)
+
+  defp maybe_random_name(:random),
+    do:
+      for(_ <- 1..20, into: "", do: <<Enum.at(@symbols, :rand.uniform(@symbol_count) - 1)>>)
+      |> String.to_atom()
+
+  defp maybe_random_name(name), do: name
 end
