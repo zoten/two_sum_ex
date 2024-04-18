@@ -1,21 +1,27 @@
 # TwoSum
 
-**TODO: Add description**
+Some implementations of the classical [Two Sum Problem](https://leetcode.com/problems/two-sum/description/) LeetCode exercise, with some benchmark
 
-## Installation
+## Usage
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `two_sum_ex` to your list of dependencies in `mix.exs`:
+### Setup
 
-```elixir
-def deps do
-  [
-    {:two_sum_ex, "~> 0.1.0"}
-  ]
-end
+``` bash
+mix deps.get
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/two_sum_ex>.
+### Run benchmarks
 
+``` bash
+mix run benches/two_sum.exs
+```
+
+## Afterthoughts
+
+### Code limitations
+
+ * The `ParallelEts` implementation keeps a shortcut respect the others, and finds the first pair of indexes/values matching the target, while the other implementations give the first in list order (left to right)
+
+### Outcome
+
+Tests have been performed mainly on a busy laptop with no scientific value. It is interesting to find the moment when the parallel ets implementation beats the most "academic" ones, and with which kind of parallelism. Opens some space for an flamegraph introspection in the future.
