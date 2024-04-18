@@ -8,29 +8,31 @@ defmodule TwoSum.Naive do
     |> Enum.with_index()
     |> Enum.reduce_while(
       {:not_found, t},
-      fn {number, number_index}, {_, [_rh | rt] = remaining} ->
-        case remaining
-             |> Enum.with_index()
-             |> Enum.reduce_while(
-               :not_found,
-               fn {other_number, other_number_index}, _ ->
-                 if number + other_number == target do
-                   {:halt, {other_number, other_number_index}}
-                 else
-                   {:cont, :not_found}
+      fn
+        {number, number_index}, {_, [_rh | rt] = remaining} ->
+          case remaining
+               |> Enum.with_index()
+               |> Enum.reduce_while(
+                 :not_found,
+                 fn {other_number, other_number_index}, _ ->
+                   if number + other_number == target do
+                     {:halt, {other_number, other_number_index}}
+                   else
+                     {:cont, :not_found}
+                   end
                  end
-               end
-             ) do
-          {other_number, other_number_index} ->
-            {:halt,
-             {{number_index, other_number_index + number_index + 1}, {number, other_number}}}
+               ) do
+            {other_number, other_number_index} ->
+              {:halt,
+               {{number_index, other_number_index + number_index + 1}, {number, other_number}}}
 
-          :not_found ->
-            {:cont, {:not_found, rt}}
-        end
+            :not_found ->
+              {:cont, {:not_found, rt}}
+          end
+
+        {_, _}, {_, []} ->
+          {:halt, :not_found}
       end
     )
   end
-
-  def run(_, _), do: :not_found
 end
